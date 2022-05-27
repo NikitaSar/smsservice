@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="spring-amqp-2.4.4">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/java libs/files-2.1/org.springframework.amqp/spring-amqp/2.4.4/aeffa519bf36e98529674a449e7f2bda330ac134/spring-amqp-2.4.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

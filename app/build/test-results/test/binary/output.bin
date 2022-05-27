@@ -1,0 +1,3 @@
+}19:50:55.627 [Test worker] INFO smsservice.controller.SmsController - Received 'SmsMessage(phone=123, msg=Text)' from queue.
+~19:50:55.651 [Test worker] INFO smsservice.controller.SmsController - Received 'SmsMessage(phone=null, msg=null)' from queue.
+Š19:50:55.657 [Test worker] INFO smsservice.controller.SmsController - Received 'SmsMessage(phone=12345678, msg=Text message)' from queue.
