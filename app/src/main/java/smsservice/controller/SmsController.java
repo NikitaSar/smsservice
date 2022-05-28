@@ -10,6 +10,7 @@ import smsservice.model.SmsMessage;
 import smsservice.service.QueueContainerService;
 import smsservice.service.SmsService;
 
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -39,7 +40,7 @@ public class SmsController {
         var balance = smsService.getBalance();
         if (balance < thresholdBalance) {
             containerService.stop();
-            var msg = String.format("Balance: %.2f", balance);
+            var msg = String.format(Locale.US, "Balance: %.2f", balance);
             smsService.send(adminPhone, msg);
             throw new AmqpException(msg);
         }
