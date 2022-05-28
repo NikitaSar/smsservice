@@ -2,8 +2,11 @@ package smsservice.service.smsprovider;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.MultiValueMapAdapter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriComponentsBuilder;
 import smsservice.Consts;
 
 import java.util.HashMap;
@@ -13,36 +16,42 @@ import java.util.Map;
 public class SmsRuProvider implements SmsProvider {
     private final RestTemplate restTemplate;
     private final String token;
-//    private Map<String, Object> uriVariables;
 
-    public SmsRuProvider(@Value("${SMSRU_TOKEN}") String token) {
-        restTemplate = new RestTemplate();
+    public SmsRuProvider(@Value("${SMSRU_TOKEN}") String token, RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
         restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(Consts.SMSRU_BASE_URL));
-        //uriVariables = Map.of("api_id", token, "json", 1);
         this.token = token;
     }
 
     @Override
     public SmsResponse authorization() throws Exception {
-        var uri = String.format("/auth/check?api_id=%s&json=1", token);
-        var res = restTemplate.getForEntity(uri, SmsResponse.class)
-                .getBody();
-
-        return res;
+        return restTemplate.getForEntity(makeUriString("/auth/check"), SmsResponse.class).getBody();
     }
 
     @Override
     public SmsBalanceResponse getBalance() throws Exception {
-        return restTemplate.getForEntity("/my/balance", SmsBalanceResponse.class)
-                .getBody();
+        return restTemplate.getForEntity(makeUriString("/my/balance"), SmsBalanceResponse.class).getBody();
     }
 
     @Override
     public SmsResponse send(String phone, String msg) throws Exception {
-//        HashMap<String, Object> uriVariablesEx = new HashMap<>(uriVariables);
-//        uriVariablesEx.put("to", phone);
-//        uriVariablesEx.put("msg", msg);
-        return restTemplate.getForEntity("/sms/send", SmsResponse.class)
-                .getBody();
+        return restTemplate.getForEntity(
+                makeUriString("/sms/send)", Map.of("to", phone, "msg", msg)),
+                SmsResponse.class).getBody();
+    }
+
+    private String makeUriString(String uri) {
+        return makeUriString(uri, Map.of());
+    }
+
+    private String makeUriString(String uri, Map<String, String> uriParams) {
+        if (null == uriParams)
+            throw new IllegalArgumentException("uriParams cannot be null.");
+        var uriBuilder = UriComponentsBuilder.fromHttpUrl(uri)
+                .queryParam("api_id", token)
+                .queryParam("json", 1);
+        uriParams.forEach(uriBuilder::queryParam);
+
+        return uriBuilder.toUriString();
     }
 }
