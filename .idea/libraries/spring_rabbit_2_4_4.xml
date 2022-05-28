@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="spring-rabbit-2.4.4">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/java libs/files-2.1/org.springframework.amqp/spring-rabbit/2.4.4/cd1363ad733cb11326510d19f99cbdc6445dbcdd/spring-rabbit-2.4.4.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
