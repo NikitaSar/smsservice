@@ -19,7 +19,6 @@ public class SmsRuProvider implements SmsProvider {
 
     public SmsRuProvider(@Value("${SMSRU_TOKEN}") String token, RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(Consts.SMSRU_BASE_URL));
         this.token = token;
     }
 
@@ -47,7 +46,7 @@ public class SmsRuProvider implements SmsProvider {
     private String makeUriString(String uri, Map<String, String> uriParams) {
         if (null == uriParams)
             throw new IllegalArgumentException("uriParams cannot be null.");
-        var uriBuilder = UriComponentsBuilder.fromHttpUrl(uri)
+        var uriBuilder = UriComponentsBuilder.fromHttpUrl(Consts.SMSRU_BASE_URL + uri)
                 .queryParam("api_id", token)
                 .queryParam("json", 1);
         uriParams.forEach(uriBuilder::queryParam);

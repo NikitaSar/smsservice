@@ -34,7 +34,7 @@ public class SmsController {
         }
     }
 
-    @RabbitListener(queues = "sms", containerFactory = "myRabbitListenerContainerFactory")
+    @RabbitListener(queues = "${QUEUE_NAME}", containerFactory = "myRabbitListenerContainerFactory")
     public void listen(SmsMessage data) throws Exception {
         log.info("Received '{}' from queue.", data);
         var balance = smsService.getBalance();
