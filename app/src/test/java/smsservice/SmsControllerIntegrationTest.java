@@ -47,7 +47,7 @@ public class SmsControllerIntegrationTest extends IntegrationTesBase {
         }
 
         @Bean
-        public Queue hello() {
+        public Queue makeQueue() {
             return new Queue(rabbitQueueName);
         }
 
@@ -69,13 +69,28 @@ public class SmsControllerIntegrationTest extends IntegrationTesBase {
 
     @Test
     public void queueListen() throws Exception {
+        var expectedPhone = "123456789";
+        var expectedMsg = "Text";
         var res = new SmsBalanceResponse(10f);
         given(smsProvider.getBalance()).willReturn(res);
-        given(smsProvider.send("2222", "text")).willReturn(res);
-        var sms = new SmsMessage("2222", "text");
+        given(smsProvider.send(expectedPhone, expectedMsg)).willReturn(res);
+        var sms = new SmsMessage(expectedPhone, expectedMsg);
         rabbitTemplate.convertAndSend(queue.getName(), sms);
         Thread.sleep(2000);
-        verify(smsProvider).send("2222", "text");
+        verify(smsProvider).send(expectedPhone, expectedMsg);
+    }
+
+    @Test
+    public void queueListenNegativeBalance() throws Exception {
+        var expectedPhone = adminPhone;
+        var expectedMsg = "Balance: 1.00";
+        var res = new SmsBalanceResponse(1f);
+        given(smsProvider.getBalance()).willReturn(res);
+        given(smsProvider.send(expectedPhone, expectedMsg)).willReturn(res);
+        var sms = new SmsMessage("12345678", "Text message");
+        rabbitTemplate.convertAndSend(queue.getName(), sms);
+        Thread.sleep(2000);
+        verify(smsProvider).send(expectedPhone, expectedMsg);
     }
 
 }

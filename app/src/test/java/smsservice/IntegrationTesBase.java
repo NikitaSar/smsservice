@@ -15,6 +15,7 @@ public abstract class IntegrationTesBase {
     public static String rabbitUser;
     public static String rabbitPass;
     public static String rabbitQueueName;
+    public static String adminPhone;
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
@@ -29,9 +30,10 @@ public abstract class IntegrationTesBase {
             rabbitPort = rabbit.getMappedPort(5672);
             rabbitUser = rabbitPass = "guest";
             rabbitQueueName = "sms";
+            adminPhone = "1111";
             TestPropertyValues
                     .of("THRESHOLD_BALANCE=5",
-                            "ADMIN_PHONE=12345",
+                            String.format("ADMIN_PHONE=%s", adminPhone),
                             String.format("QUEUE_NAME=%s", rabbitQueueName),
                             String.format("RABBIT_HOST=%s", rabbitHost),
                             String.format("RABBIT_PORT=%d", rabbitPort),
