@@ -6,10 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class SmsResponse {
-    private String status;
+    protected String status;
     @JsonProperty("status_code")
-    private SmsStatusCode code;
+    protected SmsStatusCode code;
     @JsonProperty("status_text")
-    private String message;
+    protected String message;
+
+    public SmsResponse(SmsStatusCode code) {
+        this.code = code;
+    }
 }
